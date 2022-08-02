@@ -25,6 +25,7 @@ class QuationsPage extends StatefulWidget {
 
 class _QuationsPage extends State<QuationsPage> {
   int answerCountCorrect = 0;
+  int answerCountNotCorrect = 0;
 
   CarouselController buttonCarouselController = CarouselController();
   @override
@@ -52,14 +53,15 @@ class _QuationsPage extends State<QuationsPage> {
                         onPageChanged: null,
                         onScrolled: ((value) {
                           if (value?.toInt() == quations.data!.length - 1) {
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(builder: (context) {
-                                return ResultPage(
-                                  answerCountCorrect: answerCountCorrect,
-                                );
-                              }),
-                            );
+                            Navigator.pushAndRemoveUntil(context,
+                                CupertinoPageRoute(builder: (context) {
+                              return ResultPage(
+                                category: widget.category,
+                                difficult: widget.difficult,
+                                answerCountCorrect: answerCountCorrect,
+                                answerNotCountCorrect: answerCountNotCorrect,
+                              );
+                            }), (c) => false);
                           }
                         }),
                         viewportFraction: 1,
@@ -77,6 +79,8 @@ class _QuationsPage extends State<QuationsPage> {
 
                                 if (answersCorrect[ans] == "true") {
                                   answerCountCorrect++;
+                                } else {
+                                  answerCountNotCorrect++;
                                 }
 
                                 buttonCarouselController.nextPage(
